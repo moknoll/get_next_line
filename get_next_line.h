@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 09:02:50 by moritzknoll       #+#    #+#             */
-/*   Updated: 2024/11/06 09:27:57 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2024/11/06 10:44:07 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <fcntl.h>
+# include <stdlib.h>
 
-#define BUFFER_SIZE 42
+#define BUFFER_SIZE 10
 
 char	*get_next_line(int fd);
 int		ft_strlen(const char *str);

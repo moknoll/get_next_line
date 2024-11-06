@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 09:15:04 by moritzknoll       #+#    #+#             */
-/*   Updated: 2024/11/06 09:26:50 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2024/11/06 10:59:51 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,22 +128,22 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return (sub_string);
 }
 
-char	*ft_strrchr(const char *s, int c)
+char	*ft_strchr(const char *s, int c)
 {
 	int	len;
 
 	len = 0;
 	while (s[len])
 	{
-		len++;
-	}
-	while (len >= 0)
-	{
 		if (s[len] == (char)c)
 		{
 			return ((char *)&s[len]);
 		}
-		len--;
+		len++;
+	}
+	if (s[len] == (char)c)
+	{
+		return ((char *)&s[len]);
 	}
 	return (NULL);
 }
