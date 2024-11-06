@@ -6,7 +6,7 @@
 /*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 09:15:04 by moritzknoll       #+#    #+#             */
-/*   Updated: 2024/11/06 10:59:51 by mknoll           ###   ########.fr       */
+/*   Updated: 2024/11/06 11:52:22 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,24 +126,4 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		i++;
 	}
 	return (sub_string);
-}
-
-char	*ft_strchr(const char *s, int c)
-{
-	int	len;
-
-	len = 0;
-	while (s[len])
-	{
-		if (s[len] == (char)c)
-		{
-			return ((char *)&s[len]);
-		}
-		len++;
-	}
-	if (s[len] == (char)c)
-	{
-		return ((char *)&s[len]);
-	}
-	return (NULL);
 }
