@@ -3,29 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/06 09:02:50 by moritzknoll       #+#    #+#             */
-/*   Updated: 2024/11/06 11:56:05 by mknoll           ###   ########.fr       */
+/*   Created: 2024/11/08 10:59:48 by moritzknoll       #+#    #+#             */
+/*   Updated: 2024/11/08 12:29:44 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-# include <stdio.h>
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 10
+# endif
+# include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
-# include <stdlib.h>
-# define BUFFER_SIZE 42
+# include <stdio.h>
 
 char	*get_next_line(int fd);
-int		ft_strlen(const char *str);
-void	ft_strcat(char *dest, char *src);
-char	*ft_strjoin(char const *s1, char const *s2);
-void	*ft_calloc(size_t nitems, size_t size);
-char	*ft_strrchr(const char *s, int c);
 char	*ft_strdup(char *s);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
-
+size_t	ft_strlen(char *s);
+char	*ft_substr(char *s, unsigned int start, size_t len);
+char	*ft_strjoin(char *s1, char *s2);
+void	fill_str(char *res, char *s1, char *s2);
 
 #endif
