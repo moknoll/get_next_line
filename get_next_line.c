@@ -6,20 +6,19 @@
 /*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 10:59:34 by moritzknoll       #+#    #+#             */
-/*   Updated: 2024/11/08 12:38:10 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2024/11/12 09:58:48 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "get_next_line.h"
 
 char	*ft_strchr(char *s, int c);
+char	*read_bytes(int fd, char  *new_line, char	*buffer);
 
 char	*get_next_line(int fd)
 {
 	char	*buffer;
-	ssize_t	bytes_read;
 	char	*line;
-	char	*temp;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
@@ -33,24 +32,33 @@ char	*get_next_line(int fd)
 		free(line);
 		return (NULL);
 	}
-
-	bytes_read = read(fd, buffer, BUFFER_SIZE);
-	while (bytes_read > 0)
-	{
-		buffer[bytes_read] = '\0';
-		temp = ft_strjoin(line, buffer);
-		free(line);
-		line = temp;
-		if (ft_strchr(buffer, '\n'))
-			break;
-	}
-	if (bytes_read == -1 || (bytes_read == 0 && line[0] == '\0'))
-	{
-		free(line);
-		line = NULL;
-	}
+	line = read_bytes(fd, line, buffer);
 	free(buffer);
 	return (line);
+}
+
+char	*read_bytes(int fd, char	*new_line, char *buffer)
+{
+	char	*temp;
+	ssize_t	bytes_r;
+
+	bytes_r = read(fd, buffer, BUFFER_SIZE);
+	while (bytes_r > 0)
+	{
+		buffer[bytes_r] = '\0';
+		temp = ft_strjoin(new_line, buffer);
+		free(new_line);
+		new_line = temp;
+		if (ft_strchr(buffer, '\n'))
+			break ;
+		bytes_r = read(fd, buffer, BUFFER_SIZE);
+	}
+	if (bytes_r == -1 || (bytes_r == 0 && new_line[0] == '\0'))
+	{
+		free(new_line);
+		new_line = NULL;
+	}
+	return (new_line);
 }
 
 char	*ft_strchr(char *s, int c)
@@ -86,7 +94,7 @@ int main()
 
 	if (result)
 	{
-		printf("\n%s", result);
+		printf("%s", result);
 		free (result);
 	}
 	else
