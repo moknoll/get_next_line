@@ -3,102 +3,108 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/08 10:59:34 by moritzknoll       #+#    #+#             */
-/*   Updated: 2024/11/12 09:58:48 by moritzknoll      ###   ########.fr       */
+/*   Created: 2024/11/20 11:02:26 by mknoll            #+#    #+#             */
+/*   Updated: 2024/11/20 11:07:34 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "get_next_line.h"
+#include "get_next_line.h"
 
-char	*ft_strchr(char *s, int c);
-char	*read_bytes(int fd, char  *new_line, char	*buffer);
+static char	*_fill_line_buffer(int fd, char *left_c, char *buffer);
+static char	*_set_line(char *line);
+static char	*ft_strchr(char *s, int c);
 
 char	*get_next_line(int fd)
 {
-	char	*buffer;
-	char	*line;
+	static char	*left_c;
+	char		*line;
+	char		*buffer;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
-	line = (char *)malloc(1);
-	if (!line)
-		return (NULL);
-	line[0] = '\0';
-	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buffer)
+	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 	{
-		free(line);
+		free(left_c);
+		free(buffer);
+		left_c = NULL;
+		buffer = NULL;
 		return (NULL);
 	}
-	line = read_bytes(fd, line, buffer);
+	if (!buffer)
+		return (NULL);
+	line = _fill_line_buffer(fd, left_c, buffer);
 	free(buffer);
+	buffer = NULL;
+	if (!line)
+		return (NULL);
+	left_c = _set_line(line);
 	return (line);
 }
 
-char	*read_bytes(int fd, char	*new_line, char *buffer)
+static char	*_set_line(char *line_buffer)
 {
-	char	*temp;
-	ssize_t	bytes_r;
+	char	*left_c;
+	ssize_t	i;
 
-	bytes_r = read(fd, buffer, BUFFER_SIZE);
-	while (bytes_r > 0)
+	i = 0;
+	while (line_buffer[i] != '\n' && line_buffer[i] != '\0')
+		i++;
+	if (line_buffer[i] == 0 || line_buffer[1] == 0)
+		return (NULL);
+	left_c = ft_substr(line_buffer, i + 1, ft_strlen(line_buffer) - i);
+	if (*left_c == 0)
 	{
-		buffer[bytes_r] = '\0';
-		temp = ft_strjoin(new_line, buffer);
-		free(new_line);
-		new_line = temp;
+		free(left_c);
+		left_c = NULL;
+	}
+	line_buffer[i + 1] = 0;
+	return (left_c);
+}
+
+static char	*_fill_line_buffer(int fd, char *left_c, char *buffer)
+{
+	ssize_t	b_read;
+	char	*tmp;
+
+	b_read = 1;
+	while (b_read > 0)
+	{
+		b_read = read(fd, buffer, BUFFER_SIZE);
+		if (b_read == -1)
+		{
+			free(left_c);
+			return (NULL);
+		}
+		else if (b_read == 0)
+			break ;
+		buffer[b_read] = 0;
+		if (!left_c)
+			left_c = ft_strdup("");
+		tmp = left_c;
+		left_c = ft_strjoin(tmp, buffer);
+		free(tmp);
+		tmp = NULL;
 		if (ft_strchr(buffer, '\n'))
 			break ;
-		bytes_r = read(fd, buffer, BUFFER_SIZE);
 	}
-	if (bytes_r == -1 || (bytes_r == 0 && new_line[0] == '\0'))
-	{
-		free(new_line);
-		new_line = NULL;
-	}
-	return (new_line);
+	return (left_c);
 }
 
-char	*ft_strchr(char *s, int c)
+static char	*ft_strchr(char *s, int c)
 {
-	int	len;
+	unsigned int	i;
+	char			cc;
 
-	len = 0;
-	while (s[len])
+	cc = (char) c;
+	i = 0;
+	while (s[i])
 	{
-		if (s[len] == (char)c)
-		{
-			return ((char *)&s[len]);
-		}
-		len++;
+		if (s[i] == cc)
+			return ((char *) &s[i]);
+		i++;
 	}
-	if (s[len] == (char)c)
-	{
-		return ((char *)&s[len]);
-	}
+	if (s[i] == cc)
+		return ((char *) &s[i]);
 	return (NULL);
-}
-
-int main()
-{
-	int fd = open("test.txt", O_RDONLY);
-	char *result = get_next_line(fd);
-
-	if (fd < 0)
-    {
-        perror("Error opening file");
-        return (1);
-    }
-
-	if (result)
-	{
-		printf("%s", result);
-		free (result);
-	}
-	else
-		printf("Failed");
-	close(fd);
-	return (0);
 }

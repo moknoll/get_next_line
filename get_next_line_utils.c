@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/06 09:15:04 by moritzknoll       #+#    #+#             */
-/*   Updated: 2024/11/08 11:49:58 by moritzknoll      ###   ########.fr       */
+/*   Created: 2024/11/20 11:02:37 by mknoll            #+#    #+#             */
+/*   Updated: 2024/11/20 11:09:14 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
