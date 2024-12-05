@@ -3,27 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/04 14:06:10 by moritzknoll       #+#    #+#             */
-/*   Updated: 2024/12/05 08:50:16 by moritzknoll      ###   ########.fr       */
+/*   Created: 2024/11/20 11:02:26 by mknoll            #+#    #+#             */
+/*   Updated: 2024/12/05 11:12:56 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strchr(const char *s, int c);
-static char *seperate_line(char *line_buffer);
-static char	*fill_line(int fd, char *stat_char, char *buffer);
+static char	*fill_line(int fd, char *left_c, char *buffer);
+static char	*seperate(char *line);
+static char	*ft_strchr(char *s, int c);
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
 	static char	*stat_char;
 	char		*line;
 	char		*buffer;
 
-	buffer = (char *)malloc((BUFFERSIZE + 1) * sizeof(char));
-	if (fd < 0 || BUFFERSIZE <= 0 || read(fd, 0, 0) < 0)
+	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 	{
 		free(stat_char);
 		free(buffer);
@@ -38,14 +38,14 @@ char *get_next_line(int fd)
 	buffer = NULL;
 	if (!line)
 		return (NULL);
-	stat_char = seperate_line(line);
+	stat_char = seperate(line);
 	return (line);
 }
 
-static char *seperate_line(char *line_buffer)
+static char	*seperate(char *line_buffer)
 {
-	char *stat_char;
-	int i;
+	char	*stat_char;
+	ssize_t	i;
 
 	i = 0;
 	while (line_buffer[i] != '\n' && line_buffer[i] != '\0')
@@ -64,50 +64,45 @@ static char *seperate_line(char *line_buffer)
 
 static char	*fill_line(int fd, char *stat_char, char *buffer)
 {
-	ssize_t bytesread;
-	char *temp;
+	ssize_t	b_read;
+	char	*tmp;
 
-	bytesread = 1;
-	while(bytesread > 0)
+	b_read = 1;
+	while (b_read > 0)
 	{
-		bytesread = read(fd, buffer, BUFFERSIZE);
-		if (bytesread == -1)
+		b_read = read(fd, buffer, BUFFER_SIZE);
+		if (b_read == -1)
 		{
 			free(stat_char);
 			return (NULL);
 		}
-		else if (bytesread == 0)
+		else if (b_read == 0)
 			break ;
-		buffer[bytesread] = 0;
+		buffer[b_read] = 0;
 		if (!stat_char)
 			stat_char = ft_strdup("");
-		temp = stat_char;
-		stat_char = ft_strjoin(temp, buffer);
-		free(temp);
-		temp = NULL;
+		tmp = stat_char;
+		stat_char = ft_strjoin(tmp, buffer);
+		free(tmp);
+		tmp = NULL;
 		if (ft_strchr(buffer, '\n'))
 			break ;
 	}
-	return(stat_char);
+	return (stat_char);
 }
 
-
-char	*ft_strchr(const char *s, int c)
+static char	*ft_strchr(char *s, int c)
 {
-	int	i;
+	unsigned int	i;
 
 	i = 0;
 	while (s[i])
 	{
 		if (s[i] == (char)c)
-		{
-			return ((char *)&s[i]);
-		}
+			return ((char *) &s[i]);
 		i++;
 	}
 	if (s[i] == (char)c)
-	{
-		return ((char *)&s[i]);
-	}
+		return ((char *) &s[i]);
 	return (NULL);
 }
