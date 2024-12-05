@@ -3,41 +3,49 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/20 11:02:37 by mknoll            #+#    #+#             */
-/*   Updated: 2024/11/20 11:09:14 by mknoll           ###   ########.fr       */
+/*   Created: 2024/12/04 14:33:29 by moritzknoll       #+#    #+#             */
+/*   Updated: 2024/12/05 08:48:41 by moritzknoll      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strdup(char *s1)
+size_t	ft_strlen(const char *str)
 {
-	char			*dest;
-	unsigned int	i;
+	int	len;
 
-	dest = (char *) malloc(ft_strlen(s1) + 1);
-	if (!dest)
-		return (NULL);
-	i = 0;
-	while (s1[i])
+	len = 0;
+	while (str[len])
 	{
-		dest[i] = s1[i];
-		i++;
+		len++;
 	}
-	dest[i] = 0;
-	return (dest);
+	return (len);
 }
 
-size_t	ft_strlen(char *s)
+char	*ft_strdup(char *s)
 {
-	int	i;
+	int		i;
+	int		len;
+	char	*copy;
 
 	i = 0;
+	len = 0;
+	while (s[len])
+	{
+		len++;
+	}
+	copy = (char *) malloc(len + 1);
+	if (copy == NULL)
+		return (NULL);
 	while (s[i])
+	{
+		copy[i] = s[i];
 		i++;
-	return (i);
+	}
+	copy[i] = '\0';
+	return (copy);
 }
 
 char	*ft_substr(char *s, unsigned int start, size_t len)
@@ -64,28 +72,39 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	return (str);
 }
 
-char	*ft_strjoin(char *s1, char *s2)
-{
-	char			*res;
-
-	res = (char *) malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
-	if (!res)
-		return (NULL);
-	fill_str(res, s1, s2);
-	return (res);
-}
-
-void	fill_str(char *res, char *s1, char *s2)
+static void	ft_strcat(char *dest, char *src)
 {
 	unsigned int	i;
 	unsigned int	j;
 
+	j = 0;
 	i = 0;
-	j = 0;
-	while (s1[j])
-		res[i++] = s1[j++];
-	j = 0;
-	while (s2[j])
-		res[i++] = s2[j++];
-	res[i] = '\0';
+	while (dest[i])
+	{
+		i++;
+	}
+	while (src[j])
+	{
+		dest[i] = src[j];
+		i++;
+		j++;
+	}
+	dest[i] = '\0';
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	int		len_s1;
+	int		len_s2;
+	char	*new_string;
+
+	len_s1 = ft_strlen(s1);
+	len_s2 = ft_strlen(s2);
+	new_string = (char *)malloc(len_s1 + len_s2 + 1);
+	if (!new_string)
+		return (NULL);
+	new_string[0] = '\0';
+	ft_strcat(new_string, (char *)s1);
+	ft_strcat(new_string, (char *)s2);
+	return (new_string);
 }
