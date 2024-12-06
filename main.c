@@ -1,25 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/06 15:14:41 by mknoll            #+#    #+#             */
+/*   Updated: 2024/12/06 15:17:06 by mknoll           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
-#include "get_next_line.h"
 
-int main(void)
+
+int main()
 {
-	int fd;
-	char *line;
-	int count = 0;
+	int fd = open("test.txt", O_RDONLY);
 
-	fd = open("test1.txt", O_RDONLY);
-	if (fd == -1)
-	{
-		perror("Error opening file");
-		return (1);
-	}
-	while ((line = get_next_line(fd)) != NULL)
-	{
-		count++;
-		printf("%d. Line: %s", count, line);
-		free(line);
-	}
-	close(fd);
-	return (0);
+	printf("%s", get_next_line(fd))
 }
