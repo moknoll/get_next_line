@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moritzknoll <moritzknoll@student.42.fr>    +#+  +:+       +#+        */
+/*   By: mknoll <mknoll@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 11:02:26 by mknoll            #+#    #+#             */
-/*   Updated: 2024/12/10 20:09:44 by moritzknoll      ###   ########.fr       */
+/*   Updated: 2024/12/16 14:07:46 by mknoll           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,20 @@ char	*get_next_line(int fd)
 	char		*line;
 	char		*buffer;
 
-	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, NULL, 0) < 0)
-	{
-		free(stat_char);
-		free(buffer);
-		stat_char = NULL;
-		buffer = NULL;
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	}
+	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return (NULL);
 	line = fill_line(fd, stat_char, buffer);
 	free(buffer);
 	buffer = NULL;
 	if (!line)
+	{
+		free(stat_char);
+		stat_char = NULL;
 		return (NULL);
+	}
 	stat_char = seperate(line);
 	return (line);
 }
@@ -72,7 +70,7 @@ static char	*fill_line(int fd, char *stat_char, char *buffer)
 	{
 		b_read = read(fd, buffer, BUFFER_SIZE);
 		if (b_read == -1)
-			return (free(stat_char), NULL);
+			return (NULL);
 		else if (b_read == 0)
 			break ;
 		buffer[b_read] = 0;
